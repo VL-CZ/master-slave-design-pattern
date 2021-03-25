@@ -9,25 +9,31 @@ namespace Master_slave_design_pattern
 
         static void Main(string[] args)
         {
-            int dimension = 1000;
-            Matrix matrix1 = Matrix.GenerateRandom(dimension, dimension);
-            Matrix matrix2 = Matrix.GenerateRandom(dimension, dimension);
-
+            int matrixDimension = 1000;
             MatrixCalculator matrixCalculator = new SimpleMatrixCalculator();
             var stopwatch = new Stopwatch();
+            int repeats = 10;
+            long totalElapsedMs = 0;
 
-            stopwatch.Start();
-            var result = matrixCalculator.Multiply(matrix1, matrix2);
-            stopwatch.Stop();
+            for (int i = 0; i < repeats; i++)
+            {
+                Matrix matrix1 = Matrix.GenerateRandom(matrixDimension, matrixDimension);
+                Matrix matrix2 = Matrix.GenerateRandom(matrixDimension, matrixDimension);
 
-            Console.WriteLine($"{stopwatch.ElapsedMilliseconds} ms");
+                stopwatch.Restart();
+                Matrix result = matrixCalculator.Multiply(matrix1, matrix2);
+                stopwatch.Stop();
+                totalElapsedMs += stopwatch.ElapsedMilliseconds;
 
-            //// print the result
-            //Console.Write(matrix1);
-            //Console.WriteLine("multiplied by");
-            //Console.Write(matrix2);
-            //Console.WriteLine("equals");
-            //Console.Write(result);
+                //// print the result
+                //Console.Write(matrix1);
+                //Console.WriteLine("multiplied by");
+                //Console.Write(matrix2);
+                //Console.WriteLine("equals");
+                //Console.Write(result);
+            }
+
+            Console.WriteLine($"Average: {totalElapsedMs / repeats} ms");
         }
     }
 }

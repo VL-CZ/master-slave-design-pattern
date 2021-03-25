@@ -1,0 +1,1 @@
+## Example of Master-slave design pattern implementation for matrix multiplication
