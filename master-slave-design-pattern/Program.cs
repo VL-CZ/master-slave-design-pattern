@@ -7,12 +7,9 @@ namespace Master_slave_design_pattern
     {
         public static readonly Random randomGenerator = new Random();
 
-        static void Main(string[] args)
+        static long GetAverageComputationTime(int matrixDimension, MatrixCalculator matrixCalculator, int repeats)
         {
-            int matrixDimension = 1000;
-            MatrixCalculator matrixCalculator = new SimpleMatrixCalculator();
             var stopwatch = new Stopwatch();
-            int repeats = 10;
             long totalElapsedMs = 0;
 
             for (int i = 0; i < repeats; i++)
@@ -33,7 +30,19 @@ namespace Master_slave_design_pattern
                 //Console.Write(result);
             }
 
-            Console.WriteLine($"Average: {totalElapsedMs / repeats} ms");
+            return totalElapsedMs / repeats;
+        }
+
+        static void Main(string[] args)
+        {
+            int matrixDimension = 50;
+            int repeats = 10;
+
+            long simpleCalculatorTime = GetAverageComputationTime(matrixDimension, new SimpleMatrixCalculator(), repeats);
+            Console.WriteLine($"Simple calculator: {simpleCalculatorTime} ms");
+
+            long parallelCalculatorTime = GetAverageComputationTime(matrixDimension, new ParallelMatrixCalculator(), repeats);
+            Console.WriteLine($"Simple calculator: {parallelCalculatorTime} ms");
         }
     }
 }

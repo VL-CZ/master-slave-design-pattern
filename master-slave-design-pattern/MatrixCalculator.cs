@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Master_slave_design_pattern
 {
@@ -58,6 +59,32 @@ namespace Master_slave_design_pattern
                     multipliedValues[rowIndex, columnIndex] = GetScalarProduct(row, column);
                 }
             }
+            return new Matrix(multipliedValues);
+        }
+    }
+
+    public class ParallelMatrixCalculator : MatrixCalculator
+    {
+        public override Matrix Multiply(Matrix firstMatrix, Matrix secondMatrix)
+        {
+            var multipliedValues = new int[firstMatrix.Height, secondMatrix.Width];
+            var tasks = new Task[firstMatrix.Height];
+
+            for (int rowIndex = 0; rowIndex < multipliedValues.GetLength(0); rowIndex++)
+            {
+                tasks[rowIndex] = new Task(() =>
+                {
+                    for (int columnIndex = 0; columnIndex < multipliedValues.GetLength(1); columnIndex++)
+                    {
+                        var row = firstMatrix.GetRow(0);
+                        var column = secondMatrix.GetColumn(0);
+                        multipliedValues[0, 0] = GetScalarProduct(row, column);
+                    }
+                });
+                tasks[rowIndex].Start();
+            }
+
+            Task.WaitAll(tasks);
             return new Matrix(multipliedValues);
         }
     }
