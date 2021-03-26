@@ -99,15 +99,12 @@ namespace Master_slave_design_pattern
             // allocate the slaves
             var tasks = new Task<int[]>[firstMatrix.Height];
 
-            // assign the sub-problems to slaves
+            // assign the sub-problems to slaves and run them
             for (int rowIndex = 0; rowIndex < multipliedValues.GetLength(0); rowIndex++)
             {
                 var row = firstMatrix.GetRow(rowIndex);
-                tasks[rowIndex] = new Task<int[]>(() => MultiplyRowWithMatrix(row, secondMatrix));
+                tasks[rowIndex] = Task.Run(() => MultiplyRowWithMatrix(row, secondMatrix));
             }
-
-            // start all the slaves
-            Parallel.ForEach(tasks, t => t.Start());
 
             // wait until all the slaves finish
             Task.WaitAll(tasks);
