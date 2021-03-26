@@ -37,6 +37,28 @@ namespace Master_slave_design_pattern
             }
             return scalarProduct;
         }
+
+        /// <summary>
+        /// multiply row with the matrix
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="matrix"></param>
+        /// <returns>product of multiplication <paramref name="row"/> x <paramref name="matrix"/></returns>
+        protected int[] MultiplyRowWithMatrix(int[] row, Matrix matrix)
+        {
+            if (row.Length != matrix.Height)
+            {
+                throw new ArgumentException("Row and column have different number of items");
+            }
+
+            int[] productsRow = new int[matrix.Width];
+            for (int columnIndex = 0; columnIndex < matrix.Width; columnIndex++)
+            {
+                var column = matrix.GetColumn(columnIndex);
+                productsRow[columnIndex] = GetScalarProduct(row, column);
+            }
+            return productsRow;
+        }
     }
 
     public class SimpleMatrixCalculator : MatrixCalculator
@@ -65,6 +87,7 @@ namespace Master_slave_design_pattern
 
     public class ParallelMatrixCalculator : MatrixCalculator
     {
+        /// <inheritdoc/>
         public override Matrix Multiply(Matrix firstMatrix, Matrix secondMatrix)
         {
             var multipliedValues = new int[firstMatrix.Height, secondMatrix.Width];
@@ -72,19 +95,22 @@ namespace Master_slave_design_pattern
 
             for (int rowIndex = 0; rowIndex < multipliedValues.GetLength(0); rowIndex++)
             {
+                int rr = rowIndex;
                 tasks[rowIndex] = new Task(() =>
                 {
                     for (int columnIndex = 0; columnIndex < multipliedValues.GetLength(1); columnIndex++)
                     {
-                        var row = firstMatrix.GetRow(0);
-                        var column = secondMatrix.GetColumn(0);
-                        multipliedValues[0, 0] = GetScalarProduct(row, column);
+                        var row = firstMatrix.GetRow(rr);
+                        var column = secondMatrix.GetColumn(columnIndex);
+                        multipliedValues[0, columnIndex] = GetScalarProduct(row, column);
                     }
                 });
-                tasks[rowIndex].Start();
+                //tasks[rowIndex].Start();
             }
 
+            Parallel.ForEach(tasks, t => t.Start());
             Task.WaitAll(tasks);
+
             return new Matrix(multipliedValues);
         }
     }

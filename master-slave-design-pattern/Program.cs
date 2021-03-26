@@ -35,14 +35,14 @@ namespace Master_slave_design_pattern
 
         static void Main(string[] args)
         {
-            int matrixDimension = 50;
+            int matrixDimension = 300;
             int repeats = 10;
 
             long simpleCalculatorTime = GetAverageComputationTime(matrixDimension, new SimpleMatrixCalculator(), repeats);
             Console.WriteLine($"Simple calculator: {simpleCalculatorTime} ms");
 
             long parallelCalculatorTime = GetAverageComputationTime(matrixDimension, new ParallelMatrixCalculator(), repeats);
-            Console.WriteLine($"Simple calculator: {parallelCalculatorTime} ms");
+            Console.WriteLine($"Parallel calculator: {parallelCalculatorTime} ms");
         }
     }
 }
