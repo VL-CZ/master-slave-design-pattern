@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace Master_slave_design_pattern
 {
@@ -7,42 +6,26 @@ namespace Master_slave_design_pattern
     {
         public static readonly Random randomGenerator = new Random();
 
-        static long GetAverageComputationTime(int matrixDimension, MatrixCalculator matrixCalculator, int repeats)
+        private static void Main(string[] args)
         {
-            var stopwatch = new Stopwatch();
-            long totalElapsedMs = 0;
+            // setup
+            int matrixDimension = 3;
 
-            for (int i = 0; i < repeats; i++)
-            {
-                Matrix matrix1 = Matrix.GenerateRandom(matrixDimension, matrixDimension);
-                Matrix matrix2 = Matrix.GenerateRandom(matrixDimension, matrixDimension);
+            //MatrixCalculator matrixCalculator = new SimpleMatrixCalculator();
+            MatrixCalculator matrixCalculator = new ParallelMatrixCalculator();
 
-                stopwatch.Restart();
-                Matrix result = matrixCalculator.Multiply(matrix1, matrix2);
-                stopwatch.Stop();
-                totalElapsedMs += stopwatch.ElapsedMilliseconds;
+            var matrix1 = Matrix.GenerateRandom(matrixDimension, matrixDimension);
+            var matrix2 = Matrix.GenerateRandom(matrixDimension, matrixDimension);
 
-                //// print the result
-                //Console.Write(matrix1);
-                //Console.WriteLine("multiplied by");
-                //Console.Write(matrix2);
-                //Console.WriteLine("equals");
-                //Console.Write(result);
-            }
+            // compute the result
+            var result = matrixCalculator.Multiply(matrix1, matrix2);
 
-            return totalElapsedMs / repeats;
-        }
-
-        static void Main(string[] args)
-        {
-            int matrixDimension = 300;
-            int repeats = 10;
-
-            long simpleCalculatorTime = GetAverageComputationTime(matrixDimension, new SimpleMatrixCalculator(), repeats);
-            Console.WriteLine($"Simple calculator: {simpleCalculatorTime} ms");
-
-            long parallelCalculatorTime = GetAverageComputationTime(matrixDimension, new ParallelMatrixCalculator(), repeats);
-            Console.WriteLine($"Parallel calculator: {parallelCalculatorTime} ms");
+            // print
+            Console.Write(matrix1);
+            Console.WriteLine("multiplied by");
+            Console.Write(matrix2);
+            Console.WriteLine("equals");
+            Console.Write(result);
         }
     }
 }
