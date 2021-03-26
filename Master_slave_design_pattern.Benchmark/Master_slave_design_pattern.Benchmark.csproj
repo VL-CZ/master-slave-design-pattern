@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\master-slave-design-pattern\Master_slave_design_pattern.csproj" />
+    <ProjectReference Include="..\Master_slave_design_pattern\Master_slave_design_pattern.csproj" />
   </ItemGroup>
 
 </Project>
