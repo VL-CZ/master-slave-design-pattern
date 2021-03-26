@@ -5,34 +5,60 @@ namespace Master_slave_design_pattern.Benchmark
 {
     class Program
     {
-        static long GetAverageComputationTime(int matrixDimension, MatrixCalculator matrixCalculator, int repeats)
+        /// <summary>
+        /// get average computation times of both algorithms
+        /// </summary>
+        /// <param name="matrixDimension">dimension of matrices to generate</param>
+        /// <param name="repeats">how many times to repeat the algorithms</param>
+        /// <returns></returns>
+        static ElapsedCalculationTimesDto GetAverageComputationTime(int matrixDimension, int repeats)
         {
             var stopwatch = new Stopwatch();
-            long totalElapsedMs = 0;
+            long simpleAlgoElapsedMs = 0;
+            long parallelAlgoElapsedMs = 0;
+            var simpleMatrixCalculator = new SimpleMatrixCalculator();
+            var parallelMatrixCalculator = new ParallelMatrixCalculator();
+            var averageElapsedTimes = new ElapsedCalculationTimesDto();
 
             for (int i = 0; i < repeats; i++)
             {
                 Matrix matrix1 = Matrix.GenerateRandom(matrixDimension, matrixDimension);
                 Matrix matrix2 = Matrix.GenerateRandom(matrixDimension, matrixDimension);
 
+                // run simple algo
                 stopwatch.Restart();
-                Matrix result = matrixCalculator.Multiply(matrix1, matrix2);
+                Matrix simpleAlgoResult = simpleMatrixCalculator.Multiply(matrix1, matrix2);
                 stopwatch.Stop();
-                totalElapsedMs += stopwatch.ElapsedMilliseconds;
+                simpleAlgoElapsedMs += stopwatch.ElapsedMilliseconds;
+
+                // run parallel (master-slave) algo
+                stopwatch.Restart();
+                Matrix parallelAlgoResult = parallelMatrixCalculator.Multiply(matrix1, matrix2);
+                stopwatch.Stop();
+                parallelAlgoElapsedMs += stopwatch.ElapsedMilliseconds;
             }
 
-            return totalElapsedMs / repeats;
+            averageElapsedTimes.SimpleAlgoAverageTime = simpleAlgoElapsedMs / repeats;
+            averageElapsedTimes.ParallelAlgoAverageTime = parallelAlgoElapsedMs / repeats;
+            return averageElapsedTimes;
         }
+
         static void Main(string[] args)
         {
-            int matrixDimension = 200;
+            int matrixDimension = 500;
             int repeats = 10;
 
-            long simpleCalculatorTime = GetAverageComputationTime(matrixDimension, new SimpleMatrixCalculator(), repeats);
-            Console.WriteLine($"Simple calculator: {simpleCalculatorTime} ms");
+            var averageComputationTimes = GetAverageComputationTime(matrixDimension, repeats);
 
-            long parallelCalculatorTime = GetAverageComputationTime(matrixDimension, new ParallelMatrixCalculator(), repeats);
-            Console.WriteLine($"Parallel calculator: {parallelCalculatorTime} ms");
+            Console.WriteLine($"Simple calculator: {averageComputationTimes.SimpleAlgoAverageTime} ms");
+            Console.WriteLine($"Parallel calculator: {averageComputationTimes.ParallelAlgoAverageTime} ms");
         }
     }
+
+    struct ElapsedCalculationTimesDto
+    {
+        public long SimpleAlgoAverageTime { get; set; }
+        public long ParallelAlgoAverageTime { get; set; }
+    }
+
 }
