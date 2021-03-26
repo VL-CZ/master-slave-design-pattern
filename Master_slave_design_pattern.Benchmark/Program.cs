@@ -45,7 +45,7 @@ namespace Master_slave_design_pattern.Benchmark
 
         static void Main(string[] args)
         {
-            int matrixDimension = 500;
+            int matrixDimension = 300;
             int repeats = 10;
 
             var averageComputationTimes = GetAverageComputationTime(matrixDimension, repeats);

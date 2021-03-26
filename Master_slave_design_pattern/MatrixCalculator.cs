@@ -62,6 +62,9 @@ namespace Master_slave_design_pattern
         }
     }
 
+    /// <summary>
+    /// simple algorithm for matrix multiplication
+    /// </summary>
     public class SimpleMatrixCalculator : MatrixCalculator
     {
         /// <inheritdoc/>
@@ -83,27 +86,33 @@ namespace Master_slave_design_pattern
         }
     }
 
+    /// <summary>
+    /// parallel algorithm for matrix multiplication (using master-slave design pattern)
+    /// </summary>
     public class ParallelMatrixCalculator : MatrixCalculator
     {
         /// <inheritdoc/>
         public override Matrix Multiply(Matrix firstMatrix, Matrix secondMatrix)
         {
             var multipliedValues = new int[firstMatrix.Height, secondMatrix.Width];
+
+            // allocate the slaves
             var tasks = new Task<int[]>[firstMatrix.Height];
 
+            // assign the sub-problems to slaves
             for (int rowIndex = 0; rowIndex < multipliedValues.GetLength(0); rowIndex++)
             {
-                int rr = rowIndex;
-                tasks[rowIndex] = new Task<int[]>(() =>
-                {
-                    var row = firstMatrix.GetRow(rr);
-                    return MultiplyRowWithMatrix(row, secondMatrix);
-                });
+                var row = firstMatrix.GetRow(rowIndex);
+                tasks[rowIndex] = new Task<int[]>(() => MultiplyRowWithMatrix(row, secondMatrix));
             }
 
+            // start all the slaves
             Parallel.ForEach(tasks, t => t.Start());
+
+            // wait until all the slaves finish
             Task.WaitAll(tasks);
 
+            // get the results from slaves and write it into the result
             for (int index = 0; index < tasks.Length; index++)
             {
                 int[] taskResult = tasks[index].Result;
