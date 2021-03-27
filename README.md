@@ -3,11 +3,24 @@
 ### Simple benchmark
 - average computation times measured with randomly generated matrices of the given size with 10 repetitions
 
+#### My PC
+
 | Matrix size | simple algorithm time (ms) | parallel algorithm time (ms) |
-| ----------- | -------------------------- | ---------------------------- |
-| 10 x 10     | 4                          | 10                           |
-| 50 x 50     | 8                          | 16                           |
-| 100 x 100   | 37                         | 30                           |
-| 200 x 200   | 356                        | 157                          |
-| 300 x 300   | 702                        | 314                          |
-| 500 x 500   | 2540                       | 1256                         |
+| :---------: | :------------------------: | :--------------------------: |
+|   10 x 10   |             4              |              10              |
+|   50 x 50   |             8              |              16              |
+|  100 x 100  |             37             |              30              |
+|  200 x 200  |            356             |             157              |
+|  300 x 300  |            702             |             314              |
+|  500 x 500  |            2540            |             1256             |
+
+#### MFF lab (upl0)
+
+| Matrix size | simple algorithm time (ms) | parallel algorithm time (ms) |
+| :---------: | :------------------------: | :--------------------------: |
+|   10 x 10   |            < 1             |             < 1              |
+|   50 x 50   |             1              |             < 1              |
+|  100 x 100  |             11             |              4               |
+|  200 x 200  |             89             |              28              |
+|  300 x 300  |            266             |              89              |
+|  500 x 500  |            1215            |             428              |
