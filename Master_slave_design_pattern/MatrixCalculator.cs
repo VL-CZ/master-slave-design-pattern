@@ -40,7 +40,7 @@ namespace Master_slave_design_pattern
         }
 
         /// <summary>
-        /// multiply row with the matrix
+        /// multiply one row with the matrix
         /// </summary>
         /// <param name="row"></param>
         /// <param name="matrix"></param>
@@ -67,6 +67,7 @@ namespace Master_slave_design_pattern
     /// </summary>
     public class SimpleMatrixCalculator : MatrixCalculator
     {
+        // we don't use master-slave design pattern here
         /// <inheritdoc/>
         public override Matrix Multiply(Matrix firstMatrix, Matrix secondMatrix)
         {
@@ -79,8 +80,11 @@ namespace Master_slave_design_pattern
             for (int rowIndex = 0; rowIndex < multipliedValues.GetLength(0); rowIndex++)
             {
                 var row = firstMatrix.GetRow(rowIndex);
-                var productRow = MultiplyRowWithMatrix(row, secondMatrix);
-                multipliedValues.WriteRow(productRow, rowIndex);
+                for (int columnIndex = 0; columnIndex < multipliedValues.GetLength(1); columnIndex++)
+                {
+                    var column = secondMatrix.GetColumn(columnIndex);
+                    multipliedValues[rowIndex, columnIndex] = GetScalarProduct(row, column);
+                }
             }
             return new Matrix(multipliedValues);
         }
@@ -91,28 +95,33 @@ namespace Master_slave_design_pattern
     /// </summary>
     public class ParallelMatrixCalculator : MatrixCalculator
     {
+        // this method acts as a MASTER
         /// <inheritdoc/>
         public override Matrix Multiply(Matrix firstMatrix, Matrix secondMatrix)
         {
             var multipliedValues = new int[firstMatrix.Height, secondMatrix.Width];
 
             // allocate the slaves
-            var tasks = new Task<int[]>[firstMatrix.Height];
+            var slaves = new Task<int[]>[firstMatrix.Height];
 
             // assign the sub-problems to slaves and run them
             for (int rowIndex = 0; rowIndex < multipliedValues.GetLength(0); rowIndex++)
             {
                 var row = firstMatrix.GetRow(rowIndex);
-                tasks[rowIndex] = Task.Run(() => MultiplyRowWithMatrix(row, secondMatrix));
+
+                // slaves compute sub-tasks - product of one row with the second matrix
+                // arguments are passed as parameters
+                // return value is stored within the Task instance
+                slaves[rowIndex] = Task.Run(() => MultiplyRowWithMatrix(row, secondMatrix));
             }
 
             // wait until all the slaves finish
-            Task.WaitAll(tasks);
+            Task.WaitAll(slaves);
 
-            // get the results from slaves and write it into the result
-            for (int index = 0; index < tasks.Length; index++)
+            // get the results from slaves (rows of matrix multiplication) and create the product matrix
+            for (int index = 0; index < slaves.Length; index++)
             {
-                int[] taskResult = tasks[index].Result;
+                int[] taskResult = slaves[index].Result;
                 multipliedValues.WriteRow(taskResult, index);
             }
 
