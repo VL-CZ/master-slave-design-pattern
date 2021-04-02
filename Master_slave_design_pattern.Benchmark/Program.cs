@@ -45,9 +45,13 @@ namespace Master_slave_design_pattern.Benchmark
 
         static void Main(string[] args)
         {
+            /// dimension of matrices (for simplicity, we consider only square matrices)
             int matrixDimension = 300;
+
+            // how many times do we repeat the measurement?
             int repeats = 10;
 
+            // start the benchmark and get the result
             var averageComputationTimes = GetAverageComputationTime(matrixDimension, repeats);
 
             Console.WriteLine($"Simple calculator: {averageComputationTimes.SimpleAlgoAverageTime} ms");
