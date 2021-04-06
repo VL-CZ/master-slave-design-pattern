@@ -70,17 +70,18 @@ namespace Master_slave_design_pattern
         /// </summary>
         /// <param name="height">height of the matrix to create</param>
         /// <param name="width">width of the matrix to create</param>
+        /// <param name="minimalValue">minimal inclusive value of the matrix item (default 0)</param>
+        /// <param name="minimalValue">maximal exclusive value of the matrix item (default 2)</param>
         /// <returns></returns>
-        public static Matrix GenerateRandom(int height, int width)
+        public static Matrix GenerateRandom(int height, int width, int minimalValue = 0, int maximalValue = 2)
         {
-            int maximalValue = 2;
             var values = new int[height, width];
 
             for (int rowIndex = 0; rowIndex < height; rowIndex++)
             {
                 for (int columnIndex = 0; columnIndex < width; columnIndex++)
                 {
-                    values[rowIndex, columnIndex] = Program.randomGenerator.Next(maximalValue);
+                    values[rowIndex, columnIndex] = Program.randomGenerator.Next(minimalValue, maximalValue);
                 }
             }
 
