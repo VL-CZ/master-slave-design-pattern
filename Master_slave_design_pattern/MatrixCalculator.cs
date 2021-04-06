@@ -112,7 +112,13 @@ namespace Master_slave_design_pattern
                 // slaves compute sub-tasks - product of one row with the second matrix
                 // arguments are passed as parameters
                 // return value is stored within the Task instance
-                slaves[rowIndex] = Task.Run(() => MultiplyRowWithMatrix(row, secondMatrix));
+                slaves[rowIndex] = new Task<int[]>(() => MultiplyRowWithMatrix(row, secondMatrix));
+            }
+
+            /// start all the slaves
+            foreach (var slave in slaves)
+            {
+                slave.Start();
             }
 
             // wait until all the slaves finish

@@ -45,7 +45,7 @@ namespace Master_slave_design_pattern.Benchmark
 
         static void Main(string[] args)
         {
-            /// dimension of matrices (for simplicity, we consider only square matrices)
+            // dimension of matrices (for simplicity, we consider only square matrices)
             int matrixDimension = 300;
 
             // how many times do we repeat the measurement?
