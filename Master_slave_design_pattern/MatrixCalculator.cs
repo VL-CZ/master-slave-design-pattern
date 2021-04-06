@@ -104,7 +104,7 @@ namespace Master_slave_design_pattern
             // allocate the slaves
             var slaves = new Task<int[]>[firstMatrix.Height];
 
-            // assign the sub-problems to slaves and run them
+            // assign the sub-problems to slaves
             for (int rowIndex = 0; rowIndex < multipliedValues.GetLength(0); rowIndex++)
             {
                 var row = firstMatrix.GetRow(rowIndex);
