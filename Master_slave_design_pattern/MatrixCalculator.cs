@@ -115,7 +115,7 @@ namespace Master_slave_design_pattern
                 slaves[rowIndex] = new Task<int[]>(() => MultiplyRowWithMatrix(row, secondMatrix));
             }
 
-            /// start all the slaves
+            // start all the slaves
             foreach (var slave in slaves)
             {
                 slave.Start();
