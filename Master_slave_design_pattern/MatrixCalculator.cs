@@ -63,7 +63,7 @@ namespace Master_slave_design_pattern
     }
 
     /// <summary>
-    /// simple algorithm for matrix multiplication
+    /// simple calculator for matrix multiplication
     /// </summary>
     public class SimpleMatrixCalculator : MatrixCalculator
     {
@@ -77,6 +77,8 @@ namespace Master_slave_design_pattern
             }
 
             var multipliedValues = new int[firstMatrix.Height, secondMatrix.Width];
+
+            // we go row-by-row and column-by-column
             for (int rowIndex = 0; rowIndex < multipliedValues.GetLength(0); rowIndex++)
             {
                 var row = firstMatrix.GetRow(rowIndex);
@@ -91,7 +93,7 @@ namespace Master_slave_design_pattern
     }
 
     /// <summary>
-    /// parallel algorithm for matrix multiplication (using master-slave design pattern)
+    /// parallel matrix multiplication (using master-slave design pattern)
     /// </summary>
     public class ParallelMatrixCalculator : MatrixCalculator
     {
